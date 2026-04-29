@@ -24,8 +24,8 @@ dependencies:
   # In-App Purchase
   in_app_purchase: ^3.2.0
 
-  # OneSignal Push Notifications
-  onesignal_flutter: ^5.2.6
+  # Push (choose ONE)
+  # onesignal_flutter: ^5.2.6
 
   # In-App Review
   in_app_review: ^2.0.9
@@ -36,29 +36,25 @@ dependencies:
   # Localization
   intl: ^0.20.2
 
-  # Shared Preferences
+  # Storage
   shared_preferences: ^2.3.2
 
-  # Connectivity
+  # Network / Utils
   connectivity_plus: ^6.0.5
-
-  # Package Info
   package_info_plus: ^8.1.0
-
-  # URL Launcher
   url_launcher: ^6.3.0
-
-  # Flutter Native Splash
-  flutter_native_splash: ^2.4.1
-
-  # App Icon
-  flutter_launcher_icons: ^0.14.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
   build_runner: ^2.4.12
+
+  # Dev tools
+  flutter_native_splash: ^2.4.1
+  flutter_launcher_icons: ^0.14.1
+  change_app_package_name: ^1.5.0
+  rename: ^3.1.0
 
 flutter:
   uses-material-design: true

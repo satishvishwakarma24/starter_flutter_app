@@ -44,7 +44,7 @@ flutter run
 
 ## Folder Structure (MVC)
 
-```
+```text
 lib/
 ├── main.dart                    # Entry point
 ├── app.dart                     # MaterialApp + providers
@@ -57,7 +57,7 @@ lib/
 ├── core/
 │   ├── theme/
 │   │   ├── app_theme.dart       # Light & Dark ThemeData
-│   │   └── app_theme_provider.dart
+│   │   └── theme_provider.dart  # Theme state management
 │   ├── utils/
 │   │   ├── locale_provider.dart  # 11-language support
 │   │   ├── purchase_service.dart # In-App Purchase
@@ -65,11 +65,9 @@ lib/
 │   └── widgets/
 │       └── banner_ad_widget.dart
 │
-├── features/
-│   ├── home/
-│   │   └── home_screen.dart
-│   └── settings/
-│       └── settings_screen.dart
+├── src/                         # UI Screens
+│   ├── home_screen.dart
+│   └── settings.dart
 │
 └── l10n/                        # ARB files for all 11 languages
     ├── app_en.arb
@@ -111,3 +109,32 @@ To test on emulator:
 1. Sign in with a Google account on the emulator
 2. Install via Play Store (or use internal testing track)
 3. The dialog appears on real devices / internal testing track
+
+---
+
+## Customization Commands
+
+Use these commands to fully customize this starter for your project:
+
+### 1. Change Package Name (Bundle ID)
+```bash
+flutter pub run change_app_package_name:main com.yourdomain.appname
+```
+
+### 2. Update App Icons
+Make sure you have updated `assets/images/app_icon.png` and then run:
+```bash
+flutter pub run flutter_launcher_icons
+```
+
+### 3. Generate Splash Screens
+Configure the background color and image in `pubspec.yaml` under `flutter_native_splash`, then run:
+```bash
+flutter pub run flutter_native_splash:create
+```
+
+### 4. Rename App Title
+```bash
+# To rename the application display name
+flutter pub run rename setAppName --value "Your App Name"
+```
