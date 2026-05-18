@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../config/ads_service.dart';
+import '../../config/services/ads_service.dart';
 
 /// Drop-in Banner Ad widget.
 /// Loads its own ad instance; safe to use in any screen.

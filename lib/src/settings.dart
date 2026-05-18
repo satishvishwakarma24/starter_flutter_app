@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../config/firebase_service.dart';
+import '../config/services/firebase_service.dart';
 import '../core/theme/theme_provider.dart';
 import '../core/utils/locale_provider.dart';
 import '../core/utils/purchase_service.dart';
