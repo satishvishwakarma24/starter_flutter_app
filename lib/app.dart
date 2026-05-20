@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/utils/locale_provider.dart';
-import 'src/home_screen.dart';
+import 'src/views/home_screen.dart';
 import 'l10n/app_localizations.dart';
 
 class App extends StatelessWidget {
@@ -31,6 +31,7 @@ class App extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       home: const HomeScreen(),
+    
     );
   }
 }

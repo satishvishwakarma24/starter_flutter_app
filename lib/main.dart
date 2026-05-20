@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'core/theme/theme_provider.dart';
@@ -38,13 +39,18 @@ void main() async {
   FlutterNativeSplash.remove();
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AppThemeProvider()),
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
-        // ChangeNotifierProvider(create: (_) => PurchaseService()..initialize()),
-      ],
-      child: const App(),
+    ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, __) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AppThemeProvider()),
+          ChangeNotifierProvider(create: (_) => LocaleProvider()),
+          // ChangeNotifierProvider(create: (_) => PurchaseService()..initialize()),
+        ],
+        child: const App(),
+      ),
     ),
   );
 }
