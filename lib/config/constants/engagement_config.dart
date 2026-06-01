@@ -12,8 +12,11 @@ abstract class EngagementConfig {
   static const String androidPackageName = 'com.example.starterapp';
 
   /// Public store listing URLs (used in share text and fallbacks).
-  static const String playStoreUrl =
-      'https://play.google.com/store/apps/details?id=$androidPackageName';
+  // static const String playStoreUrl =
+  //     'https://play.google.com/store/apps/details?id=$androidPackageName';
+
+  static const String playStoreUrl = 'https://play.google.com/store/apps/details?id=com.krishhapps.weathertoday.environmental.tracker.radar.rain.uv.aqi.widget.forcast&hl=en';
+
   static const String appStoreUrl =
       'https://apps.apple.com/app/id$iosAppStoreId';
 

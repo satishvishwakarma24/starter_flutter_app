@@ -102,7 +102,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: const Icon(Icons.star_outline),
             title: const Text('Rate the app'),
             subtitle: const Text('Native star rating (Play Store / App Store)'),
-            onTap: () => ReviewService.instance.requestReviewNow(),
+            onTap: () =>
+                ReviewService.instance.requestReviewNow(feedbackContext: context),
           ),
           SizedBox(height: 32.h),
         ],

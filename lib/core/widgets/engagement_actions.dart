@@ -47,7 +47,9 @@ class EngagementActions extends StatelessWidget {
               title: const Text('Rate the app'),
               subtitle: const Text('Opens native star rating sheet'),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () => ReviewService.instance.requestReviewNow(),
+              onTap: () => ReviewService.instance.requestReviewNow(
+                    feedbackContext: context,
+                  ),
             ),
           ],
         ),

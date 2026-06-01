@@ -156,12 +156,26 @@ Periodic invite prompt runs from `runEngagementSessionHooks` when the user has n
 ## Android Notes (In-App Review)
 
 The Google Play In-App Review API works on **Android 5.0+ (API 21+)**.
-Google throttles the prompt — guaranteed to show only in test mode.
 
-To test on emulator:
-1. Sign in with a Google account on the emulator
-2. Install via Play Store (or use internal testing track)
-3. The dialog appears on real devices / internal testing track
+### Why the star bottom sheet does not show (common)
+
+Log line `noContextOrActivity: called` is **misleading** — the plugin logs it on every check, even when Activity is fine. If you also see `Successfully requested review flow`, the API ran; Google simply **did not display** the UI.
+
+| Situation | What happens |
+|-----------|----------------|
+| `flutter run` / debug APK | API succeeds, sheet usually **hidden** |
+| Emulator | Same; even with Play Store installed |
+| App not on Play (e.g. `com.example.starterapp`) | No real review flow UI |
+| Google quota / user already reviewed | API OK, no sheet |
+
+**To see the real bottom sheet (stars + optional text):**
+
+1. Upload a build to **Play Console → Internal testing** (or Internal app sharing).
+2. Install **only from the Play Store** link (not `adb install` / `flutter run`).
+3. Use a **physical device** with a signed-in Google account.
+4. Tap **Rate the app** again (Google still may throttle repeats).
+
+In **debug**, a SnackBar explains this and offers **Play Store** as a fallback.
 
 ---
 

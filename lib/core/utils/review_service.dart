@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -67,10 +68,12 @@ class ReviewService {
   ///
   /// Android: Play bottom sheet with stars + optional review text.
   /// iOS: SKStoreReviewController (system star prompt).
-  /// Google/Apple may throttle how often it appears outside production.
-  Future<void> requestReviewNow() async {
+  ///
+  /// Pass [feedbackContext] while debugging — Play often completes without
+  /// showing UI on emulator / `flutter run` installs (see README).
+  Future<void> requestReviewNow({BuildContext? feedbackContext}) async {
     final prefs = await SharedPreferences.getInstance();
-    await _prompt(prefs);
+    await _prompt(prefs, feedbackContext: feedbackContext);
   }
 
   Future<int> getLaunchCount() async {
@@ -80,19 +83,63 @@ class ReviewService {
 
   // ── Internal ──────────────────────────────────────────────────────────────
 
-  Future<void> _prompt(SharedPreferences prefs) async {
+  Future<void> _prompt(
+    SharedPreferences prefs, {
+    BuildContext? feedbackContext,
+  }) async {
     if (!await _review.isAvailable()) {
       debugPrint('ℹ️ In-App Review not available — opening store listing');
       await _review.openStoreListing(
         appStoreId: EngagementConfig.iosAppStoreId,
       );
       await _markPrompted(prefs);
+      _showDebugFeedback(
+        feedbackContext,
+        openedStore: true,
+        reason: 'In-app review API unavailable on this device',
+      );
       return;
     }
 
     await _review.requestReview();
     await _markPrompted(prefs);
-    debugPrint('⭐ In-App Review prompt triggered');
+    debugPrint(
+      '⭐ In-App Review flow completed. '
+      'If no bottom sheet appeared, the app was likely not installed from '
+      'Play internal testing (Google suppresses the UI in debug/emulator).',
+    );
+    _showDebugFeedback(feedbackContext);
+  }
+
+  void _showDebugFeedback(
+    BuildContext? context, {
+    bool openedStore = false,
+    String? reason,
+  }) {
+    if (!kDebugMode || context == null || !context.mounted) return;
+
+    final message = openedStore
+        ? (reason ?? 'Opened Play Store listing.')
+        : 'Review API ran. The Play star sheet usually does not show when '
+            'installed via flutter run or on an emulator — use Play internal '
+            'testing to see it.';
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 6),
+        action: openedStore
+            ? null
+            : SnackBarAction(
+                label: 'Play Store',
+                onPressed: () {
+                  _review.openStoreListing(
+                    appStoreId: EngagementConfig.iosAppStoreId,
+                  );
+                },
+              ),
+      ),
+    );
   }
 
   Future<void> _markPrompted(SharedPreferences prefs) async {
