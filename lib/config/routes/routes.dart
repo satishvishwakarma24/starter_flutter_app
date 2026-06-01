@@ -1,6 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:starter_flutter_app/src/views/home_screen.dart';
+import '/src/views/home_screen.dart';
 import '/core/const.dart';
 import 'routes_name.dart';
 

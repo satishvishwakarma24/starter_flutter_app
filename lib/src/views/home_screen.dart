@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:starter_flutter_app/core/widgets/engagement_actions.dart';
-import 'package:starter_flutter_app/src/views/settings.dart';
+import '/core/widgets/engagement_actions.dart';
+import '/src/views/settings.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
