@@ -3,55 +3,61 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../../config/services/ads_service.dart';
 
-/// Drop-in Banner Ad widget.
-/// Loads its own ad instance; safe to use in any screen.
+/// Reusable anchored banner ad widget.
 class BannerAdWidget extends StatefulWidget {
-  final AdSize size;
-
-  const BannerAdWidget({super.key, this.size = AdSize.banner});
+  const BannerAdWidget({super.key});
 
   @override
   State<BannerAdWidget> createState() => _BannerAdWidgetState();
 }
 
 class _BannerAdWidgetState extends State<BannerAdWidget> {
-  BannerAd? _ad;
-  bool _loaded = false;
+  BannerAd? _bannerAd;
+  bool _isLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadAd();
+    _loadBanner();
   }
 
-  Future<void> _loadAd() async {
-    final ad = await AdsService.instance.loadBannerAd();
-    if (mounted) {
-      setState(() {
-        _ad = ad;
-        _loaded = true;
-      });
-    }
+  void _loadBanner() {
+    final ad = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdsService.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          if (!mounted) return;
+          setState(() => _isLoaded = true);
+        },
+        onAdFailedToLoad: (ad, error) {
+          debugPrint('Banner ad failed to load: $error');
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    );
+
+    _bannerAd = ad;
+    ad.load();
   }
 
   @override
   void dispose() {
-    _ad?.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded || _ad == null) {
-      return SizedBox(height: widget.size.height.toDouble());
+    if (!_isLoaded || _bannerAd == null) {
+      return const SizedBox(height: 50, width: double.infinity);
     }
-    return SafeArea(
-      top: false,
-      child: SizedBox(
-        width: widget.size.width.toDouble(),
-        height: widget.size.height.toDouble(),
-        child: AdWidget(ad: _ad!),
-      ),
+
+    return SizedBox(
+      width: _bannerAd!.size.width.toDouble(),
+      height: _bannerAd!.size.height.toDouble(),
+      child: AdWidget(ad: _bannerAd!),
     );
   }
 }
