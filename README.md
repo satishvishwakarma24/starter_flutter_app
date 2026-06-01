@@ -205,3 +205,15 @@ flutter pub run flutter_native_splash:create
 # To rename the application display name
 flutter pub run rename setAppName --value "Your App Name"
 ```
+
+---
+
+## Screenshots
+
+Home screen preview:
+
+![Home screen](assets/screenshots/home.png)
+
+Settings screen:
+
+![Settings screen](assets/screenshots/settings.png)
