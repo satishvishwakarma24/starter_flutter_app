@@ -1,7 +1,8 @@
 # Flutter Starter Template
 
 Production-ready starter with MVC architecture, ads, IAP, multi-language support,
-Firebase analytics, push notifications, and in-app review.
+Firebase analytics, push notifications, **home screen widgets**, **in-app review**,
+and **share / viral loops**.
 
 ---
 
@@ -27,7 +28,7 @@ flutterfire configure
 |------|----------------|
 | `lib/config/ads_service.dart` | Your AdMob Ad Unit IDs |
 | `lib/config/notification_service.dart` | Your OneSignal App ID |
-| `lib/core/utils/review_service.dart` | Your App Store ID |
+| `lib/core/config/engagement_config.dart` | App Store ID, package name, share URLs, iOS App Group |
 | `lib/core/utils/purchase_service.dart` | Your IAP product IDs |
 
 ### 4. Generate localization files
@@ -61,7 +62,11 @@ lib/
 │   ├── utils/
 │   │   ├── locale_provider.dart  # 11-language support
 │   │   ├── purchase_service.dart # In-App Purchase
-│   │   └── review_service.dart   # In-App Review
+│   │   ├── review_service.dart   # In-App Review (smart + success moments)
+│   │   ├── share_service.dart    # share_plus viral loop
+│   │   └── home_widget_service.dart # home_widget bridge
+│   ├── config/
+│   │   └── engagement_config.dart # store IDs, thresholds, share copy
 │   └── widgets/
 │       └── banner_ad_widget.dart
 │
@@ -94,9 +99,57 @@ lib/
 - [x] **Firebase Analytics** — screen tracking, events, user properties
 - [x] **Firebase Crashlytics** — crash & error reporting
 - [x] **Push Notifications** — FCM (topic-based) + OneSignal (segmented)
-- [x] **In-App Review** — smart trigger (Android API 11–15+, iOS)
+- [x] **In-App Review** — session-based + positive-moment triggers (`in_app_review`)
+- [x] **Home Screen Widget** — Android sample widget (`home_widget`); iOS extension guide in `docs/`
+- [x] **Share / Viral Loop** — invite friends, achievement shares (`share_plus`)
 - [x] **Dark/Light/System Theme** — persisted via SharedPreferences
 - [x] **Locale Persistence** — saved across sessions
+
+---
+
+## Engagement (Widgets, Review, Share)
+
+### Configure once
+
+Edit `lib/core/config/engagement_config.dart`:
+
+- `iosAppStoreId`, `androidPackageName`, `appDisplayName`
+- `iosAppGroupId` (iOS widgets; requires paid Apple Developer account)
+- Review thresholds (`reviewMinLaunches`, `reviewMinDaysBetween`)
+- Share prompt thresholds (`sharePromptMinLaunches`, …)
+
+### Home screen widget
+
+**Android** is ready: long-press home screen → Widgets → your app. Native files:
+
+- `android/.../StarterAppWidgetProvider.kt`
+- `android/.../res/layout/starter_app_widget.xml`
+
+Update widget data from your features:
+
+```dart
+await HomeWidgetService.instance.syncFromApp(
+  title: '3 tasks left',
+  subtitle: 'Updated just now',
+);
+```
+
+**iOS** requires a Widget Extension in Xcode. See `docs/ios_home_widget_example.swift`.
+
+### In-app review
+
+- Automatic: `ReviewService.instance.trackSessionAndPromptIfEligible()` (runs on home load).
+- After wins: `ReviewService.instance.trackPositiveMomentAndPromptIfEligible()`.
+- Manual: Settings → Rate the app, or `ReviewService.instance.requestReviewNow()` (native sheet, no pre-dialog).
+
+### Share / viral loop
+
+```dart
+await ShareService.instance.shareApp();
+await ShareService.instance.shareAchievement('I just hit a 7-day streak!');
+```
+
+Periodic invite prompt runs from `runEngagementSessionHooks` when the user has not shared yet.
 
 ---
 

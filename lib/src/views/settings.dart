@@ -4,9 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // import '../config/services/firebase_service.dart';
-// import '../core/utils/review_service.dart';
 import '../../core/theme/theme_provider.dart';
+import '../../core/utils/home_widget_service.dart';
 import '../../core/utils/locale_provider.dart';
+import '../../core/utils/review_service.dart';
+import '../../core/utils/share_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -71,17 +73,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: const Text(_supportEmail),
             onTap: () => _openUrl('mailto:$_supportEmail'),
           ),
-          const _SectionHeader('Feedback'),
+          const _SectionHeader('Engagement'),
           ListTile(
-            leading: const Icon(Icons.star_outline),
-            title: const Text('Rate the App'),
-            subtitle: const Text('Open the native in-app review prompt'),
-            // onTap: () => ReviewService.instance.requestReviewNow(),
-            onTap: () {
+            leading: const Icon(Icons.widgets_outlined),
+            title: const Text('Home screen widget'),
+            subtitle: const Text('Refresh widget data from the app'),
+            onTap: () async {
+              await HomeWidgetService.instance.syncFromApp();
+              if (!context.mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('In-app review not implemented.')),
+                const SnackBar(content: Text('Widget data updated.')),
               );
             },
+          ),
+          ListTile(
+            leading: const Icon(Icons.ios_share_outlined),
+            title: const Text('Share the app'),
+            subtitle: const Text('Invite friends with a store link'),
+            onTap: () async {
+              final box = context.findRenderObject() as RenderBox?;
+              final origin = box != null
+                  ? box.localToGlobal(Offset.zero) & box.size
+                  : null;
+              await ShareService.instance.shareApp(sharePositionOrigin: origin);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.star_outline),
+            title: const Text('Rate the app'),
+            subtitle: const Text('Native star rating (Play Store / App Store)'),
+            onTap: () => ReviewService.instance.requestReviewNow(),
           ),
           SizedBox(height: 32.h),
         ],
