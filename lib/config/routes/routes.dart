@@ -1,33 +1,60 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 import '/src/views/home_screen.dart';
-import '/core/const.dart';
+import '/src/views/settings.dart';
+import '../../src/widgets/main_nav_bar.dart';
 import 'routes_name.dart';
 
-class Routes {
-  static Route<dynamic>? buildRoute(RouteSettings settings) {
-    final Widget? page = switch (settings.name) {
-      RoutesName.homeScreen => const HomeScreen(),
+final GoRouter appRouter = GoRouter(
+  initialLocation: RoutesName.homeScreen,
+  routes: [
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) => _AppShell(
+        navigationShell: navigationShell,
+      ),
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: RoutesName.homeScreen,
+              name: RoutesName.homeRouteName,
+              builder: (context, state) => const HomeScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: RoutesName.settingsScreen,
+              name: RoutesName.settingsRouteName,
+              builder: (context, state) => const SettingsScreen(),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ],
+);
 
-      _ => null,
-    };
+class _AppShell extends StatelessWidget {
+  const _AppShell({required this.navigationShell});
 
-    if (page == null) return null;
+  final StatefulNavigationShell navigationShell;
 
-    // Shared-axis (horizontal slide) transition between all screens.
-    return PageRouteBuilder<void>(
-      settings: settings,
-      transitionDuration: AppAnimations.normal,
-      reverseTransitionDuration: AppAnimations.fast,
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return SharedAxisTransition(
-          animation: animation,
-          secondaryAnimation: secondaryAnimation,
-          transitionType: SharedAxisTransitionType.horizontal,
-          child: child,
-        );
-      },
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: navigationShell,
+      bottomNavigationBar: MainNavBarWidget(  
+        currentIndex: navigationShell.currentIndex,
+        onDestinationSelected: (index) {
+          navigationShell.goBranch(
+            index,
+            initialLocation: index == navigationShell.currentIndex,
+          );
+        },
+      ),
     );
   }
 }
