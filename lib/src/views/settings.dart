@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 // import '../config/services/firebase_service.dart';
 import '../../core/theme/theme_provider.dart';
-import '../../core/utils/home_widget_service.dart';
 import '../../core/utils/locale_provider.dart';
 import '../../core/utils/review_service.dart';
 import '../../core/utils/share_service.dart';
@@ -74,17 +73,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: const Text(_supportEmail),
             onTap: () => _openUrl('mailto:$_supportEmail'),
           ),
-          const _SectionHeader('Engagement'),
-          ListTile(
-            leading: const Icon(Icons.widgets_outlined),
-            title: const Text('Home screen widget'),
-            subtitle: const Text('Refresh widget data from the app'),
-            onTap: () async {
-              await HomeWidgetService.instance.syncFromApp();
-              if (!context.mounted) return;
-              ToastUtil.success('Widget data updated.');
-            },
-          ),
           ListTile(
             leading: const Icon(Icons.ios_share_outlined),
             title: const Text('Share the app'),
@@ -101,8 +89,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: const Icon(Icons.star_outline),
             title: const Text('Rate the app'),
             subtitle: const Text('Native star rating (Play Store / App Store)'),
-            onTap: () =>
-                ReviewService.instance.requestReviewNow(feedbackContext: context),
+            onTap: () => ReviewService.instance
+                .requestReviewNow(feedbackContext: context),
           ),
           SizedBox(height: 32.h),
         ],
@@ -115,13 +103,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showThemeDialog(BuildContext ctx, AppThemeProvider provider) {
     showDialog(
       context: ctx,
-      builder: (_) => SimpleDialog(
+      builder: (dialogContext) => SimpleDialog(
         title: const Text('Choose dark mode'),
         children: ThemeMode.values
             .map((mode) => SimpleDialogOption(
                   onPressed: () {
                     provider.setThemeMode(mode);
-                    Navigator.pop(ctx);
+                    Navigator.pop(dialogContext);
                   },
                   child: Row(
                     children: [
@@ -144,7 +132,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showLanguageDialog(BuildContext ctx, LocaleProvider provider) {
     showDialog(
       context: ctx,
-      builder: (_) => SimpleDialog(
+      builder: (dialogContext) => SimpleDialog(
         title: const Text('Choose Language'),
         children: LocaleProvider.supportedLocales.map((locale) {
           final name = LocaleProvider.localeNames[locale.languageCode] ??
@@ -153,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return SimpleDialogOption(
             onPressed: () {
               provider.setLocale(locale);
-              Navigator.pop(ctx);
+              Navigator.pop(dialogContext);
             },
             child: Row(
               children: [

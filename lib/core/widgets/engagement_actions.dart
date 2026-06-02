@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../utils/home_widget_service.dart';
 import '../utils/review_service.dart';
 import '../utils/share_service.dart';
 import 'share_prompt_dialog.dart';
 
-/// Quick actions for retention: widget, share, rate.
+/// Quick actions for retention: share and rate.
 class EngagementActions extends StatelessWidget {
   const EngagementActions({super.key});
 
@@ -26,14 +25,6 @@ class EngagementActions extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.widgets_outlined),
-              title: const Text('Home screen widget'),
-              subtitle: const Text('Glance info without opening the app'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => _onAddWidget(context),
-            ),
-            const Divider(height: 1, indent: 56),
             ListTile(
               leading: const Icon(Icons.ios_share_outlined),
               title: const Text('Invite a friend'),
@@ -64,43 +55,10 @@ class EngagementActions extends StatelessWidget {
         : null;
     await ShareService.instance.shareApp(sharePositionOrigin: origin);
   }
-
-  Future<void> _onAddWidget(BuildContext context) async {
-    await HomeWidgetService.instance.syncFromApp();
-
-    final pinSupported = await HomeWidgetService.instance.isPinSupported();
-    if (!context.mounted) return;
-    if (pinSupported) {
-      await HomeWidgetService.instance.requestPinWidget();
-      return;
-    }
-
-    if (!context.mounted) return;
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Add home screen widget'),
-        content: const Text(
-          'Long-press your home screen → Widgets → find this app → '
-          'drag the widget onto your screen.\n\n'
-          'iOS: add a Widget Extension in Xcode (see README).',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Got it'),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 /// Runs session tracking for review + share prompts (call from HomeScreen).
 Future<void> runEngagementSessionHooks(BuildContext context) async {
-  await HomeWidgetService.instance.initialize();
-  await HomeWidgetService.instance.syncFromApp();
-
   // Native review may appear without a dialog (platform throttled).
   await ReviewService.instance.trackSessionAndPromptIfEligible();
 

@@ -20,17 +20,6 @@ abstract class EngagementConfig {
   static const String appStoreUrl =
       'https://apps.apple.com/app/id$iosAppStoreId';
 
-  /// iOS App Group for home_widget (requires paid Apple Developer account).
-  static const String iosAppGroupId = 'group.com.example.starterapp';
-
-  /// Android widget provider class name (must match Kotlin receiver).
-  static const String androidWidgetProvider = 'StarterAppWidgetProvider';
-  static const String androidWidgetQualifiedName =
-      '$androidPackageName.$androidWidgetProvider';
-
-  /// iOS Widget Extension kind (set in Xcode Widget Extension).
-  static const String iosWidgetKind = 'StarterAppWidget';
-
   // ── In-app review ─────────────────────────────────────────────────────────
 
   static const int reviewMinLaunches = 5;

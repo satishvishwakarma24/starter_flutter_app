@@ -30,7 +30,6 @@ dependencies:
   # Engagement: review, share, home-screen widgets
   in_app_review: ^2.0.9
   share_plus: ^12.0.2
-  home_widget: ^0.9.2
 
   # State Management
   provider: ^6.1.2
