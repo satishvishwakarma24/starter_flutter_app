@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
+import 'config/routes/routes.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/utils/locale_provider.dart';
-import 'src/views/home_screen.dart';
 import 'l10n/app_localizations.dart';
 
 class App extends StatelessWidget {
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
     final themeProvider = context.watch<AppThemeProvider>();
     final localeProvider = context.watch<LocaleProvider>();
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Starter App',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
@@ -30,8 +30,7 @@ class App extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: const HomeScreen(),
-    
+      routerConfig: appRouter,
     );
   }
 }
