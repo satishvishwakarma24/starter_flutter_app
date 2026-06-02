@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:toastification/toastification.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/utils/locale_provider.dart';
 // import 'core/utils/purchase_service.dart';
@@ -51,7 +52,9 @@ void main() async {
           ChangeNotifierProvider(create: (_) => LocaleProvider()),
           // ChangeNotifierProvider(create: (_) => PurchaseService()..initialize()),
         ],
-        child: const App(),
+          child: const ToastificationWrapper(
+            child: App(),
+          ),
       ),
     ),
   );

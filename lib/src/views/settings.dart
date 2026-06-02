@@ -9,6 +9,7 @@ import '../../core/utils/home_widget_service.dart';
 import '../../core/utils/locale_provider.dart';
 import '../../core/utils/review_service.dart';
 import '../../core/utils/share_service.dart';
+import '../../core/utils/toast_util.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -81,9 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () async {
               await HomeWidgetService.instance.syncFromApp();
               if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Widget data updated.')),
-              );
+              ToastUtil.success('Widget data updated.');
             },
           ),
           ListTile(
@@ -178,9 +177,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final uri = Uri.parse(url);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open the requested link.')),
-      );
+      ToastUtil.error('Could not open the requested link.');
     }
   }
 

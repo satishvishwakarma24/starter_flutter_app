@@ -4,6 +4,7 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/constants/engagement_config.dart';
+import 'toast_util.dart';
 
 /// Smart in-app review prompts (Play Store + App Store).
 class ReviewService {
@@ -124,21 +125,9 @@ class ReviewService {
             'installed via flutter run or on an emulator — use Play internal '
             'testing to see it.';
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 6),
-        action: openedStore
-            ? null
-            : SnackBarAction(
-                label: 'Play Store',
-                onPressed: () {
-                  _review.openStoreListing(
-                    appStoreId: EngagementConfig.iosAppStoreId,
-                  );
-                },
-              ),
-      ),
+    ToastUtil.info(
+      message,
+      title: openedStore ? 'Review unavailable' : 'Review prompt ready',
     );
   }
 
